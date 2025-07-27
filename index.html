@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, initial-scale=1.0">
+  <title>智慧家庭電器儀表板</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+</head>
+<body>
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <h1>智慧家庭</h1>
+      <nav>
+        <ul>
+          <li class="active">儀表板</li>
+          <li>家電管理</li>
+          <li>用電分析</li>
+          <li>設定</li>
+        </ul>
+      </nav>
+    </aside>
+    <main class="main-content">
+      <header class="dashboard-header">
+        <h2>智慧家庭電器儀表板</h2>
+        <div class="user-info">王小明</div>
+      </header>
+      <section class="appliance-status">
+        <h3>家電狀態</h3>
+        <div class="appliance-list">
+          <div class="appliance" id="ac">冷氣：<span class="status">開啟</span></div>
+          <div class="appliance" id="light">燈：<span class="status">關閉</span></div>
+          <div class="appliance" id="tv">電視：<span class="status">開啟</span></div>
+          <div class="appliance" id="fridge">冰箱：<span class="status">開啟</span></div>
+        </div>
+      </section>
+      <section class="power-usage">
+        <h3>用電量</h3>
+        <div class="toggle-btns">
+          <button id="week-btn" class="active">本週</button>
+          <button id="month-btn">本月</button>
+        </div>
+        <div id="usage-chart" class="chart-block"></div>
+      </section>
+      <section class="peak-section">
+        <div class="peak-info">
+          <h3>一天中最高用電時段</h3>
+          <div id="peak-time">18:00 - 19:00</div>
+        </div>
+        <div class="top-appliance">
+          <h3>目前耗電量最高的家電</h3>
+          <div id="top-appliance">冷氣</div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html> 
