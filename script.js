@@ -1,35 +1,44 @@
-// 模擬家電狀態資料
+// 模擬家電狀態與用電量（每家電獨立）
 const appliances = [
-  { id: 'ac', name: '冷氣', status: true },
-  { id: 'light', name: '燈', status: false },
-  { id: 'tv', name: '電視', status: true },
-  { id: 'fridge', name: '冰箱', status: true }
+  { id: 'ac', name: '冷氣', status: true, weekUsage: [5, 6, 7, 8, 7, 9, 8], monthUsage: [120, 110, 115, 130, 140, 135, 138, 142, 145, 150, 148, 152, 155, 158, 160, 162, 165, 168, 170, 172, 175, 178, 180, 182, 185, 188, 190, 192, 195, 198] },
+  { id: 'light', name: '燈', status: false, weekUsage: [2, 2, 3, 4, 3, 4, 3], monthUsage: [40, 38, 36, 42, 44, 41, 43, 45, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68] },
+  { id: 'tv', name: '電視', status: true, weekUsage: [3, 4, 5, 6, 5, 7, 6], monthUsage: [80, 78, 75, 85, 90, 88, 89, 92, 95, 98, 97, 99, 100, 102, 104, 106, 108, 110, 112, 114, 116, 118, 120, 122, 124, 126, 128, 130, 132, 134] },
+  { id: 'fridge', name: '冰箱', status: true, weekUsage: [2, 3, 3, 4, 4, 5, 3], monthUsage: [80, 84, 69, 83, 86, 66, 80, 91, 103, 114, 106, 119, 124, 128, 133, 138, 142, 146, 150, 154, 158, 162, 166, 170, 174, 178, 182, 186, 190, 194] }
 ];
 
-// 模擬用電量資料
-const weekUsage = [12, 15, 18, 22, 19, 25, 20]; // 單位：度
-const monthUsage = [320, 310, 295, 340, 360, 330, 350, 370, 390, 410, 400, 420, 430, 440, 450, 460, 470, 480, 490, 500, 510, 520, 530, 540, 550, 560, 570, 580, 590, 600];
 const weekLabels = ['週一', '週二', '週三', '週四', '週五', '週六', '週日'];
 const monthLabels = Array.from({length: 30}, (_, i) => `${i+1}日`);
 
-// 模擬最高用電時段與家電
 const peakTime = '18:00 - 19:00';
-const topAppliance = '冷氣';
 
-// 初始化家電狀態
+// 狀態渲染
 function renderApplianceStatus() {
   appliances.forEach(appliance => {
-    const el = document.getElementById(appliance.id).querySelector('.status');
-    el.textContent = appliance.status ? '開啟' : '關閉';
-    el.className = 'status' + (appliance.status ? '' : ' off');
+    const checkbox = document.getElementById(`switch-${appliance.id}`);
+    checkbox.checked = appliance.status;
+    checkbox.onchange = function() {
+      appliance.status = this.checked;
+      renderUsageChart();
+      renderTopAppliance();
+    };
   });
 }
 
-// 用電量圖表
+// 用電量圖表（只統計開啟的家電）
 let currentMode = 'week';
 function renderUsageChart() {
-  const data = currentMode === 'week' ? weekUsage : monthUsage;
-  const categories = currentMode === 'week' ? weekLabels : monthLabels;
+  let data = [];
+  let categories = currentMode === 'week' ? weekLabels : monthLabels;
+  // 統計所有開啟家電的用電量加總
+  for (let i = 0; i < categories.length; i++) {
+    let sum = 0;
+    appliances.forEach(appliance => {
+      if (appliance.status) {
+        sum += currentMode === 'week' ? appliance.weekUsage[i] : appliance.monthUsage[i];
+      }
+    });
+    data.push(sum);
+  }
   Highcharts.chart('usage-chart', {
     chart: {
       type: 'column',
@@ -73,16 +82,32 @@ function setupToggleButtons() {
   };
 }
 
-// 初始化最高用電時段與家電
-function renderPeakInfo() {
-  document.getElementById('peak-time').textContent = peakTime;
-  document.getElementById('top-appliance').textContent = topAppliance;
+// 最高耗電家電（僅統計開啟的）
+function renderTopAppliance() {
+  let max = 0;
+  let top = '無';
+  appliances.forEach(appliance => {
+    if (appliance.status) {
+      // 以本週/本月總用電量判斷
+      const total = currentMode === 'week' ? appliance.weekUsage.reduce((a,b)=>a+b,0) : appliance.monthUsage.reduce((a,b)=>a+b,0);
+      if (total > max) {
+        max = total;
+        top = appliance.name;
+      }
+    }
+  });
+  document.getElementById('top-appliance').textContent = top;
 }
 
-// 初始化
+// 最高用電時段（維持原本模擬值）
+function renderPeakInfo() {
+  document.getElementById('peak-time').textContent = peakTime;
+}
+
 window.onload = function() {
   renderApplianceStatus();
   renderUsageChart();
   setupToggleButtons();
   renderPeakInfo();
+  renderTopAppliance();
 }; 

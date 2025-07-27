@@ -28,10 +28,34 @@
       <section class="appliance-status">
         <h3>家電狀態</h3>
         <div class="appliance-list">
-          <div class="appliance" id="ac">冷氣：<span class="status">開啟</span></div>
-          <div class="appliance" id="light">燈：<span class="status">關閉</span></div>
-          <div class="appliance" id="tv">電視：<span class="status">開啟</span></div>
-          <div class="appliance" id="fridge">冰箱：<span class="status">開啟</span></div>
+          <div class="appliance" id="ac">
+            <span class="appliance-name">冷氣</span>
+            <label class="switch">
+              <input type="checkbox" id="switch-ac">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="appliance" id="light">
+            <span class="appliance-name">燈</span>
+            <label class="switch">
+              <input type="checkbox" id="switch-light">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="appliance" id="tv">
+            <span class="appliance-name">電視</span>
+            <label class="switch">
+              <input type="checkbox" id="switch-tv">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="appliance" id="fridge">
+            <span class="appliance-name">冰箱</span>
+            <label class="switch">
+              <input type="checkbox" id="switch-fridge">
+              <span class="slider"></span>
+            </label>
+          </div>
         </div>
       </section>
       <section class="power-usage">
